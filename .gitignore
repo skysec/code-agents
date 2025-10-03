@@ -206,3 +206,28 @@ data/
 
 # Remove venv
 bin
+
+# macOS
+# Finder metadata
+.DS_Store
+# Icon files created by Finder
+Icon\r
+# Resource forks
+._*
+# macOS system files
+.AppleDouble
+.LSOverride
+# Thumbnails and indexes
+.Spotlight-V100/
+.Trashes/
+.fseventsd/
+.DocumentRevisions-V100/
+# Volume icon
+.VolumeIcon.icns
+# Apple desktop services
+.AppleDB
+.AppleDesktop
+
+# Thumbs and desktop ini (Windows, but safe to keep)
+Thumbs.db
+Desktop.ini
