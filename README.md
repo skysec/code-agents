@@ -18,11 +18,12 @@ code-agents/
 │   ├── plugin.json          # Plugin manifest (required)
 │   └── marketplace.json     # Marketplace definition
 ├── .claude/                 # Agent and command definitions
-│   ├── agents/              # Specialized agents
-│   └── commands/            # Orchestration commands
-├── registry.json            # Enhanced custom registry
+│   ├── agents/              # Specialized agents (7 total)
+│   └── commands/            # Orchestration commands (2 total)
 ├── install.sh               # Installation automation
-└── README.md               # Documentation
+├── validate.sh              # Marketplace validation
+├── index.html               # Web browser interface
+└── README.md                # Documentation
 ```
 
 ### Official Plugin Manifest
@@ -89,26 +90,12 @@ This checks:
 - ✅ Official Claude Code marketplace format
 - ✅ Plugin manifest validity
 - ✅ Agent definition format
-- ✅ Custom registry structure
+- ✅ YAML frontmatter structure
+- ✅ Command definitions
 
-## 🌐 Browse the Registry
+## 🌐 Browse the Marketplace
 
 **Web Interface:** Open `index.html` in your browser or visit our [GitHub Pages site](#) to browse agents visually.
-
-**CLI Tools:**
-```bash
-# Search for agents
-./search.sh security
-
-# List all agents
-./search.sh --all
-
-# Get detailed info
-./info.sh security-code-reviewer
-
-# List by category
-./search.sh --category planning
-```
 
 ## 📦 Available Agents
 
@@ -131,26 +118,41 @@ This checks:
 
 ## 🚀 Quick Start
 
-### Option 1: Using the Install Script (Recommended)
+### Option 1: Native Claude Code Integration (Recommended)
+
+Add to your Claude Code settings or project configuration:
+```json
+{
+  "plugins": [
+    {
+      "source": "https://github.com/skysec/code-agents"
+    }
+  ]
+}
+```
+
+Claude Code will automatically load all 7 agents and 2 commands.
+
+### Option 2: Install Script
 
 ```bash
-# Clone the registry
+# Clone the marketplace
 git clone https://github.com/skysec/code-agents.git
 
 # Navigate to your project
 cd /path/to/your/project
 
-# Install all agents
+# Install all agents and commands
 /path/to/code-agents/install.sh --all
 
-# Or install specific agents
-/path/to/code-agents/install.sh security-code-reviewer semgrep-specialist
+# Or install only agents
+/path/to/code-agents/install.sh --agents-only
 
-# Or install by category
-/path/to/code-agents/install.sh --category security --commands
+# Or install only commands
+/path/to/code-agents/install.sh --commands-only
 ```
 
-### Option 2: Git Submodule (For Teams)
+### Option 3: Git Submodule (For Teams)
 
 ```bash
 # In your project repository

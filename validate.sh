@@ -1,10 +1,8 @@
 #!/bin/bash
 #
-# Validation Script for Claude Code Agent Marketplace
+# Validation Script for Claude Code Marketplace
 #
-# Validates both:
-# 1. Official Claude Code marketplace format (.claude-plugin/)
-# 2. Custom agent registry format (registry.json)
+# Validates the official Claude Code marketplace format
 #
 
 set -e
@@ -37,7 +35,7 @@ fi
 #
 # Validate Official Claude Code Marketplace Format
 #
-print_header "Validating Official Claude Code Marketplace Format"
+print_header "Validating Claude Code Marketplace Format"
 
 # 1. Check .claude-plugin directory exists
 if [ -d ".claude-plugin" ]; then
@@ -93,7 +91,7 @@ if [ -f ".claude-plugin/plugin.json" ]; then
         fi
     fi
 else
-    print_error ".claude-plugin/plugin.json missing"
+    print_error ".claude-plugin/plugin.json missing (REQUIRED)"
     ((ERRORS++))
 fi
 
@@ -110,9 +108,15 @@ if [ -f ".claude-plugin/marketplace.json" ]; then
             print_success "Contains $plugins_count plugin(s)"
 
             # Validate each plugin entry
-            jq -r '.plugins[] | .name' .claude-plugin/marketplace.json | while read -r plugin_name; do
-                print_info "Plugin: $plugin_name"
+            jq -r '.plugins[] | .name' .claude-plugin/marketplace.json 2>/dev/null | while read -r plugin_name; do
+                print_info "  Plugin: $plugin_name"
             done
+
+            # Check categories
+            if jq -e '.categories' .claude-plugin/marketplace.json > /dev/null 2>&1; then
+                categories_count=$(jq '.categories | length' .claude-plugin/marketplace.json)
+                print_success "Defines $categories_count categories"
+            fi
         else
             print_error "marketplace.json is invalid JSON"
             ((ERRORS++))
@@ -128,7 +132,7 @@ print_header "Validating Agent Directory Structure"
 if [ -d ".claude/agents" ]; then
     print_success ".claude/agents/ directory exists"
 
-    agent_count=$(find .claude/agents -name "*.md" | wc -l)
+    agent_count=$(find .claude/agents -name "*.md" 2>/dev/null | wc -l)
     print_success "Found $agent_count agent definition(s)"
 
     # Validate each agent file
@@ -177,63 +181,23 @@ else
 fi
 
 # 5. Check commands directory
+print_header "Validating Commands Directory"
+
 if [ -d ".claude/commands" ]; then
     print_success ".claude/commands/ directory exists"
 
-    command_count=$(find .claude/commands -name "*.md" | wc -l)
+    command_count=$(find .claude/commands -name "*.md" 2>/dev/null | wc -l)
     print_success "Found $command_count command(s)"
+
+    # Validate each command file
+    for command_file in .claude/commands/*.md; do
+        if [ -f "$command_file" ]; then
+            command_name=$(basename "$command_file" .md)
+            print_success "Command '$command_name' exists"
+        fi
+    done
 else
     print_info ".claude/commands/ directory not present (optional)"
-fi
-
-#
-# Validate Custom Registry Format
-#
-print_header "Validating Custom Registry Format"
-
-if [ -f "registry.json" ]; then
-    print_success "registry.json exists"
-
-    if [ "$HAS_JQ" = true ]; then
-        if jq empty registry.json 2>/dev/null; then
-            print_success "registry.json is valid JSON"
-
-            # Validate structure
-            registry_agents=$(jq '.agents | length' registry.json)
-            print_success "Registry contains $registry_agents agent entries"
-
-            # Check each agent has required fields
-            jq -r '.agents[] | .name' registry.json | while read -r agent_name; do
-                agent_data=$(jq ".agents[] | select(.name == \"$agent_name\")" registry.json)
-
-                has_version=$(echo "$agent_data" | jq -r '.version // empty')
-                has_category=$(echo "$agent_data" | jq -r '.category // empty')
-                has_file=$(echo "$agent_data" | jq -r '.file // empty')
-
-                if [ -n "$has_version" ] && [ -n "$has_category" ] && [ -n "$has_file" ]; then
-                    print_success "Agent '$agent_name' has all required registry fields"
-                else
-                    print_error "Agent '$agent_name' missing required registry fields"
-                    ((ERRORS++))
-                fi
-            done
-
-            # Check categories defined
-            if jq -e '.categories' registry.json > /dev/null 2>&1; then
-                print_success "Categories defined in registry"
-            else
-                print_warning "No categories defined"
-                ((WARNINGS++))
-            fi
-
-        else
-            print_error "registry.json is invalid JSON"
-            ((ERRORS++))
-        fi
-    fi
-else
-    print_error "registry.json missing"
-    ((ERRORS++))
 fi
 
 #
@@ -244,21 +208,6 @@ print_header "Validating Installation Scripts"
 [ -f "install.sh" ] && [ -x "install.sh" ] && print_success "install.sh exists and is executable" || {
     print_error "install.sh missing or not executable"
     ((ERRORS++))
-}
-
-[ -f "search.sh" ] && [ -x "search.sh" ] && print_success "search.sh exists and is executable" || {
-    print_warning "search.sh missing or not executable"
-    ((WARNINGS++))
-}
-
-[ -f "info.sh" ] && [ -x "info.sh" ] && print_success "info.sh exists and is executable" || {
-    print_warning "info.sh missing or not executable"
-    ((WARNINGS++))
-}
-
-[ -f "version.sh" ] && [ -x "version.sh" ] && print_success "version.sh exists and is executable" || {
-    print_warning "version.sh missing or not executable"
-    ((WARNINGS++))
 }
 
 #
@@ -276,12 +225,8 @@ print_header "Validating Documentation"
     ((WARNINGS++))
 }
 
-[ -f "ROADMAP.md" ] && print_success "ROADMAP.md exists" || {
-    print_info "ROADMAP.md not present"
-}
-
-[ -f "USAGE_EXAMPLES.md" ] && print_success "USAGE_EXAMPLES.md exists" || {
-    print_info "USAGE_EXAMPLES.md not present"
+[ -f "MARKETPLACE.md" ] && print_success "MARKETPLACE.md exists" || {
+    print_info "MARKETPLACE.md not present"
 }
 
 #

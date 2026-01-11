@@ -1,25 +1,22 @@
 #!/bin/bash
 #
-# Claude Code Agent Registry Installer
+# Claude Code Marketplace Installer
 #
-# This script installs agents from the code-agents registry into your project
+# This script installs agents and commands from the Claude Code marketplace
 #
 # Usage:
-#   ./install.sh [options] [agent-names...]
+#   ./install.sh [options]
 #
 # Options:
-#   --all              Install all agents
-#   --category <cat>   Install all agents from a category (planning|design|quality|security|infrastructure)
-#   --list             List available agents
-#   --commands         Also install orchestration commands
+#   --all              Install all agents and commands
+#   --agents-only      Install only agents
+#   --commands-only    Install only commands
 #   --target <path>    Target directory (default: current directory)
 #   --help             Show this help message
 #
 # Examples:
-#   ./install.sh --all                          # Install all agents
-#   ./install.sh security-code-reviewer         # Install specific agent
-#   ./install.sh --category security            # Install all security agents
-#   ./install.sh --all --commands               # Install everything including commands
+#   ./install.sh --all                          # Install everything
+#   ./install.sh --agents-only                  # Install only agents
 #   ./install.sh --target /path/to/repo --all   # Install to specific directory
 
 set -e
@@ -33,8 +30,8 @@ NC='\033[0m' # No Color
 
 # Default values
 TARGET_DIR="."
-INSTALL_COMMANDS=false
-REGISTRY_URL="https://raw.githubusercontent.com/skysec/code-agents/main"
+INSTALL_AGENTS=true
+INSTALL_COMMANDS=true
 
 # Get script directory
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -56,54 +53,9 @@ print_warning() {
     echo -e "${YELLOW}⚠${NC} $1"
 }
 
-# Function to list available agents
-list_agents() {
-    echo -e "\n${BLUE}Available Agents:${NC}\n"
-
-    if [ -f "$SCRIPT_DIR/registry.json" ]; then
-        # Parse using grep and sed (more portable than jq)
-        echo "Planning & Requirements:"
-        echo "  • product-manager              - Define product requirements and user stories"
-        echo "  • project-manager              - Break down projects into implementation tasks"
-        echo ""
-        echo "Design & Architecture:"
-        echo "  • system-architect             - Design system architecture and technology stack"
-        echo ""
-        echo "Code Quality:"
-        echo "  • senior-code-reviewer         - Comprehensive code reviews"
-        echo ""
-        echo "Security:"
-        echo "  • security-code-reviewer       - Security vulnerability analysis"
-        echo "  • semgrep-specialist           - Create and enhance Semgrep rules"
-        echo ""
-        echo "Infrastructure:"
-        echo "  • terraform-infrastructure-specialist - Terraform infrastructure code"
-        echo ""
-    else
-        print_error "registry.json not found"
-        exit 1
-    fi
-}
-
-# Function to install a single agent
-install_agent() {
-    local agent_name=$1
-    local agent_file=".claude/agents/${agent_name}.md"
-
-    if [ -f "$SCRIPT_DIR/$agent_file" ]; then
-        mkdir -p "$TARGET_DIR/.claude/agents"
-        cp "$SCRIPT_DIR/$agent_file" "$TARGET_DIR/$agent_file"
-        print_success "Installed agent: $agent_name"
-        return 0
-    else
-        print_error "Agent not found: $agent_name"
-        return 1
-    fi
-}
-
 # Function to install all agents
-install_all_agents() {
-    print_info "Installing all agents..."
+install_agents() {
+    print_info "Installing agents..."
     mkdir -p "$TARGET_DIR/.claude/agents"
 
     local count=0
@@ -117,40 +69,9 @@ install_all_agents() {
     print_success "Installed $count agents"
 }
 
-# Function to install agents by category
-install_category() {
-    local category=$1
-    print_info "Installing agents from category: $category"
-
-    case $category in
-        planning)
-            install_agent "product-manager"
-            install_agent "project-manager"
-            ;;
-        design)
-            install_agent "system-architect"
-            ;;
-        quality)
-            install_agent "senior-code-reviewer"
-            ;;
-        security)
-            install_agent "security-code-reviewer"
-            install_agent "semgrep-specialist"
-            ;;
-        infrastructure)
-            install_agent "terraform-infrastructure-specialist"
-            ;;
-        *)
-            print_error "Unknown category: $category"
-            print_info "Available categories: planning, design, quality, security, infrastructure"
-            exit 1
-            ;;
-    esac
-}
-
 # Function to install commands
 install_commands() {
-    print_info "Installing orchestration commands..."
+    print_info "Installing commands..."
     mkdir -p "$TARGET_DIR/.claude/commands"
 
     local count=0
@@ -167,42 +88,54 @@ install_commands() {
 # Function to show help
 show_help() {
     cat << EOF
-Claude Code Agent Registry Installer
+Claude Code Marketplace Installer
+
+This script installs agents and commands from the specialized-agents marketplace.
 
 Usage:
-  $0 [options] [agent-names...]
+  $0 [options]
 
 Options:
-  --all              Install all agents
-  --category <cat>   Install all agents from a category
-  --list             List available agents
-  --commands         Also install orchestration commands
+  --all              Install all agents and commands (default)
+  --agents-only      Install only agents
+  --commands-only    Install only commands
   --target <path>    Target directory (default: current directory)
   --help             Show this help message
 
-Categories:
-  planning           Product and project management agents
-  design             Architecture and design agents
-  quality            Code review agents
-  security           Security analysis agents
-  infrastructure     Infrastructure as code agents
-
 Examples:
-  $0 --all                          # Install all agents
-  $0 security-code-reviewer         # Install specific agent
-  $0 --category security            # Install all security agents
-  $0 --all --commands               # Install everything
+  $0 --all                          # Install everything
+  $0 --agents-only                  # Install only agents
+  $0 --commands-only                # Install only commands
   $0 --target /path/to/repo --all   # Install to specific directory
+
+What Gets Installed:
+
+Agents (7 total):
+  • product-manager              - Define product requirements and user stories
+  • project-manager              - Break down projects into implementation tasks
+  • system-architect             - Design system architecture and technology stack
+  • senior-code-reviewer         - Comprehensive code reviews
+  • security-code-reviewer       - Security vulnerability analysis
+  • semgrep-specialist           - Create and enhance Semgrep rules
+  • terraform-infrastructure-specialist - Terraform infrastructure code
+
+Commands (2 total):
+  • product-design               - Orchestrate complete product design workflow
+  • issue-implementation         - Fetch GitHub issue and delegate to specialist
+
+After Installation:
+  Agents will be available in: $TARGET_DIR/.claude/agents/
+  Commands will be available in: $TARGET_DIR/.claude/commands/
+
+Alternative Installation Methods:
+  1. Git Submodule: git submodule add <repo-url> .claude-marketplace
+  2. Claude Code Settings: Add this repo URL to your plugin configuration
 
 EOF
 }
 
 # Main script
 main() {
-    local agents_to_install=()
-    local install_all=false
-    local category=""
-
     # Parse arguments
     while [[ $# -gt 0 ]]; do
         case $1 in
@@ -210,19 +143,18 @@ main() {
                 show_help
                 exit 0
                 ;;
-            --list|-l)
-                list_agents
-                exit 0
-                ;;
             --all|-a)
-                install_all=true
+                INSTALL_AGENTS=true
+                INSTALL_COMMANDS=true
                 shift
                 ;;
-            --category|-c)
-                category="$2"
-                shift 2
+            --agents-only)
+                INSTALL_AGENTS=true
+                INSTALL_COMMANDS=false
+                shift
                 ;;
-            --commands)
+            --commands-only)
+                INSTALL_AGENTS=false
                 INSTALL_COMMANDS=true
                 shift
                 ;;
@@ -231,15 +163,17 @@ main() {
                 shift 2
                 ;;
             *)
-                agents_to_install+=("$1")
-                shift
+                print_error "Unknown option: $1"
+                echo ""
+                show_help
+                exit 1
                 ;;
         esac
     done
 
     # Print header
     echo -e "\n${BLUE}╔════════════════════════════════════════════╗${NC}"
-    echo -e "${BLUE}║  Claude Code Agent Registry Installer     ║${NC}"
+    echo -e "${BLUE}║  Claude Code Marketplace Installer        ║${NC}"
     echo -e "${BLUE}╚════════════════════════════════════════════╝${NC}\n"
 
     # Validate target directory
@@ -250,23 +184,11 @@ main() {
 
     print_info "Target directory: $TARGET_DIR"
 
-    # Install agents
-    if [ "$install_all" = true ]; then
-        install_all_agents
-    elif [ -n "$category" ]; then
-        install_category "$category"
-    elif [ ${#agents_to_install[@]} -gt 0 ]; then
-        for agent in "${agents_to_install[@]}"; do
-            install_agent "$agent"
-        done
-    else
-        print_error "No agents specified. Use --all, --category, or specify agent names."
-        echo ""
-        show_help
-        exit 1
+    # Install components
+    if [ "$INSTALL_AGENTS" = true ]; then
+        install_agents
     fi
 
-    # Install commands if requested
     if [ "$INSTALL_COMMANDS" = true ]; then
         install_commands
     fi
@@ -278,12 +200,14 @@ main() {
     echo ""
     print_success "Installation complete!"
     echo ""
-    print_info "Agents installed in: $TARGET_DIR/.claude/agents/"
+    if [ "$INSTALL_AGENTS" = true ]; then
+        print_info "Agents installed in: $TARGET_DIR/.claude/agents/"
+    fi
     if [ "$INSTALL_COMMANDS" = true ]; then
         print_info "Commands installed in: $TARGET_DIR/.claude/commands/"
     fi
     echo ""
-    print_info "You can now use these agents in Claude Code!"
+    print_info "You can now use these agents and commands in Claude Code!"
     echo ""
 }
 

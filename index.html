@@ -339,18 +339,26 @@
     </div>
 
     <script>
-        // Load registry data
+        // Load marketplace data
         let agentsData = [];
 
-        fetch('registry.json')
+        fetch('.claude-plugin/marketplace.json')
             .then(response => response.json())
             .then(data => {
-                agentsData = data.agents;
-                renderAgents(agentsData);
-                document.getElementById('agentCount').textContent = agentsData.length;
+                // Extract agents from the first plugin
+                if (data.plugins && data.plugins.length > 0) {
+                    agentsData = data.plugins[0].agents.map(agent => ({
+                        name: agent.name,
+                        category: agent.category,
+                        description: agent.description,
+                        version: '1.0.0' // Default version
+                    }));
+                    renderAgents(agentsData);
+                    document.getElementById('agentCount').textContent = agentsData.length;
+                }
             })
             .catch(error => {
-                console.error('Error loading registry:', error);
+                console.error('Error loading marketplace:', error);
                 // Fallback to showing a message
                 document.getElementById('agentGrid').innerHTML =
                     '<p style="text-align: center; color: white;">Error loading agents. Please check the console.</p>';
@@ -381,14 +389,6 @@
                     </div>
                     <span class="agent-category category-${agent.category}">${agent.category}</span>
                     <p class="agent-description">${agent.description}</p>
-                    <div class="agent-use-cases">
-                        <h4>Use Cases</h4>
-                        <div class="use-case-list">
-                            ${agent.use_cases.slice(0, 3).map(uc =>
-                                `<span class="use-case">${uc}</span>`
-                            ).join('')}
-                        </div>
-                    </div>
                 </div>
             `).join('');
         }
@@ -407,8 +407,7 @@
             if (searchTerm) {
                 filtered = filtered.filter(agent =>
                     agent.name.toLowerCase().includes(searchTerm) ||
-                    agent.description.toLowerCase().includes(searchTerm) ||
-                    agent.use_cases.some(uc => uc.toLowerCase().includes(searchTerm))
+                    agent.description.toLowerCase().includes(searchTerm)
                 );
             }
 
