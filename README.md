@@ -6,6 +6,25 @@ A curated collection of specialized AI agents for Claude Code, designed to enhan
 
 This repository serves as a **registry** of reusable Claude Code agents that can be installed into any project. Think of it like npm for Claude Code agents - a centralized repository of specialized AI assistants that you can pull into your projects as needed.
 
+## 🌐 Browse the Registry
+
+**Web Interface:** Open `index.html` in your browser or visit our [GitHub Pages site](#) to browse agents visually.
+
+**CLI Tools:**
+```bash
+# Search for agents
+./search.sh security
+
+# List all agents
+./search.sh --all
+
+# Get detailed info
+./info.sh security-code-reviewer
+
+# List by category
+./search.sh --category planning
+```
+
 ## 📦 Available Agents
 
 ### Planning & Requirements
@@ -451,6 +470,17 @@ git submodule update
 git submodule deinit -f .claude-registry
 git submodule update --init
 ```
+
+## 🚀 Future: Marketplace Evolution
+
+This registry is the foundation for a full Claude Code Agent Marketplace. See [ROADMAP.md](ROADMAP.md) for planned features:
+
+- **v1.x:** Remote installation, CLI search, dependency management
+- **v2.0:** Web marketplace, community publishing, npm-like CLI
+- **v3.0:** Ratings & reviews, private registries, agent collections
+- **v4.0:** AI recommendations, automated composition, marketplace API
+
+Want to contribute? See the roadmap for how you can help build the marketplace!
 
 ## 📄 License
 
