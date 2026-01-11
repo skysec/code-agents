@@ -1,0 +1,173 @@
+{
+  "name": "code-agents-registry",
+  "version": "1.0.0",
+  "description": "A registry of specialized Claude Code agents for software development",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/skysec/code-agents"
+  },
+  "registry": {
+    "type": "claude-agent-registry",
+    "agents_path": ".claude/agents",
+    "commands_path": ".claude/commands"
+  },
+  "agents": [
+    {
+      "name": "product-manager",
+      "version": "1.0.0",
+      "category": "planning",
+      "description": "Defines comprehensive product and feature requirements with functional/non-functional specs",
+      "file": ".claude/agents/product-manager.md",
+      "tools": ["Bash", "Glob", "Grep", "Read", "Edit", "MultiEdit", "Write", "NotebookEdit", "WebFetch", "TodoWrite", "WebSearch"],
+      "color": "blue",
+      "use_cases": [
+        "Define product requirements",
+        "Create user stories",
+        "Specify functional requirements",
+        "Document non-functional requirements"
+      ]
+    },
+    {
+      "name": "project-manager",
+      "version": "1.0.0",
+      "category": "planning",
+      "description": "Transforms architectural designs into detailed implementation plans with task breakdown",
+      "file": ".claude/agents/project-manager.md",
+      "tools": ["Bash", "Glob", "Grep", "Read", "Edit", "MultiEdit", "Write", "NotebookEdit", "WebFetch", "TodoWrite", "WebSearch"],
+      "color": "blue",
+      "use_cases": [
+        "Break down projects into tasks",
+        "Estimate complexity",
+        "Sequence implementation work",
+        "Create implementation plans"
+      ]
+    },
+    {
+      "name": "system-architect",
+      "version": "1.0.0",
+      "category": "design",
+      "description": "Creates comprehensive system architecture designs with technology recommendations",
+      "file": ".claude/agents/system-architect.md",
+      "tools": ["Bash", "Glob", "Grep", "Read", "Edit", "MultiEdit", "Write", "NotebookEdit", "WebFetch", "TodoWrite", "WebSearch"],
+      "color": "green",
+      "use_cases": [
+        "Design system architecture",
+        "Technology stack selection",
+        "API specification",
+        "Data modeling",
+        "Architectural reviews"
+      ]
+    },
+    {
+      "name": "senior-code-reviewer",
+      "version": "1.0.0",
+      "category": "quality",
+      "description": "Conducts thorough code reviews focused on architecture, design patterns, and best practices",
+      "file": ".claude/agents/senior-code-reviewer.md",
+      "tools": ["Glob", "Grep", "Read", "WebFetch", "TodoWrite", "WebSearch", "Bash", "mcp__context7__resolve-library-id", "mcp__context7__get-library-docs", "mcp__ide__getDiagnostics", "ListMcpResourcesTool", "mcp__terraform__search_policies", "mcp__terraform__search_providers", "mcp__terraform__search_modules", "mcp__terraform__get_provider_details", "mcp__terraform__get_policy_details", "mcp__terraform__get_module_details", "mcp__terraform__get_latest_provider_version", "mcp__terraform__get_latest_module_version"],
+      "color": "yellow",
+      "use_cases": [
+        "Code review",
+        "Architecture review",
+        "Design pattern validation",
+        "Performance analysis",
+        "Test coverage review"
+      ]
+    },
+    {
+      "name": "security-code-reviewer",
+      "version": "1.0.0",
+      "category": "security",
+      "description": "Reviews code for security vulnerabilities using OWASP framework",
+      "file": ".claude/agents/security-code-reviewer.md",
+      "tools": ["Glob", "Grep", "Read", "WebFetch", "TodoWrite", "WebSearch", "Bash", "mcp__context7__resolve-library-id", "mcp__context7__get-library-docs", "mcp__ide__getDiagnostics", "ListMcpResourcesTool", "mcp__terraform__search_policies", "mcp__terraform__search_providers", "mcp__terraform__search_modules", "mcp__terraform__get_provider_details", "mcp__terraform__get_policy_details", "mcp__terraform__get_module_details", "mcp__terraform__get_latest_provider_version", "mcp__terraform__get_latest_module_version"],
+      "color": "red",
+      "use_cases": [
+        "Security vulnerability review",
+        "OWASP compliance check",
+        "Input validation review",
+        "Authentication/authorization review",
+        "Data protection analysis"
+      ]
+    },
+    {
+      "name": "semgrep-specialist",
+      "version": "1.0.0",
+      "category": "security",
+      "description": "Creates and enhances Semgrep rules for static code analysis",
+      "file": ".claude/agents/semgrep-specialist.md",
+      "tools": ["Bash", "Glob", "Grep", "Read", "Edit", "MultiEdit", "Write", "NotebookEdit", "WebFetch", "TodoWrite", "WebSearch", "BashOutput", "KillBash", "ListMcpResourcesTool", "ReadMcpResourceTool", "mcp__context7__resolve-library-id", "mcp__context7__get-library-docs", "mcp__ide__getDiagnostics", "mcp__ide__executeCode"],
+      "color": "red",
+      "use_cases": [
+        "Create Semgrep rules",
+        "Enhance existing rules",
+        "Validate rule effectiveness",
+        "Set up code scanning policies"
+      ]
+    },
+    {
+      "name": "terraform-infrastructure-specialist",
+      "version": "1.0.0",
+      "category": "infrastructure",
+      "description": "Designs, reviews, and optimizes Terraform infrastructure code",
+      "file": ".claude/agents/terraform-infrastructure-specialist.md",
+      "tools": ["Glob", "Grep", "Read", "WebFetch", "TodoWrite", "WebSearch", "Bash", "mcp__context7__resolve-library-id", "mcp__context7__get-library-docs", "mcp__ide__getDiagnostics", "ListMcpResourcesTool", "mcp__terraform__search_policies", "mcp__terraform__search_providers", "mcp__terraform__search_modules", "mcp__terraform__get_provider_details", "mcp__terraform__get_policy_details", "mcp__terraform__get_module_details", "mcp__terraform__get_latest_provider_version", "mcp__terraform__get_latest_module_version"],
+      "color": "green",
+      "use_cases": [
+        "Create Terraform modules",
+        "Review infrastructure code",
+        "Multi-environment setup",
+        "CI/CD integration",
+        "Infrastructure optimization"
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "name": "product-design",
+      "version": "1.0.0",
+      "description": "Orchestrates a complete product design workflow from requirements to implementation plan",
+      "file": ".claude/commands/product-design.md",
+      "agents_used": ["product-manager", "system-architect", "project-manager"],
+      "outputs": [
+        "docs/requirements.md",
+        "docs/architecture.md",
+        "docs/tasks.md"
+      ],
+      "usage": "/product-design <feature_name> \"<description>\""
+    },
+    {
+      "name": "issue-implementation",
+      "version": "1.0.0",
+      "description": "Fetches GitHub issue information and delegates to appropriate specialist agent",
+      "file": ".claude/commands/issue-implementation.md",
+      "agents_used": ["terraform-infrastructure-specialist", "security-code-reviewer", "senior-code-reviewer", "product-manager", "system-architect", "project-manager"],
+      "outputs": [
+        ".claude/context/{issue-id}_task.md"
+      ],
+      "usage": "/issue-implementation <owner> <repo> <issue-id>"
+    }
+  ],
+  "categories": {
+    "planning": {
+      "description": "Agents for requirements gathering and project planning",
+      "agents": ["product-manager", "project-manager"]
+    },
+    "design": {
+      "description": "Agents for system architecture and technical design",
+      "agents": ["system-architect"]
+    },
+    "quality": {
+      "description": "Agents for code review and quality assurance",
+      "agents": ["senior-code-reviewer"]
+    },
+    "security": {
+      "description": "Agents for security analysis and vulnerability detection",
+      "agents": ["security-code-reviewer", "semgrep-specialist"]
+    },
+    "infrastructure": {
+      "description": "Agents for infrastructure as code and DevOps",
+      "agents": ["terraform-infrastructure-specialist"]
+    }
+  }
+}
