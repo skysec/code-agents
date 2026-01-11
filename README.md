@@ -6,6 +6,91 @@ A curated collection of specialized AI agents for Claude Code, designed to enhan
 
 This repository serves as a **registry** of reusable Claude Code agents that can be installed into any project. Think of it like npm for Claude Code agents - a centralized repository of specialized AI assistants that you can pull into your projects as needed.
 
+## 🏪 Official Claude Code Marketplace
+
+This repository implements the **official Claude Code marketplace specification**, making it compatible with Claude Code's native plugin system.
+
+### Marketplace Structure
+
+```
+code-agents/
+├── .claude-plugin/          # Official marketplace metadata
+│   ├── plugin.json          # Plugin manifest (required)
+│   └── marketplace.json     # Marketplace definition
+├── .claude/                 # Agent and command definitions
+│   ├── agents/              # Specialized agents
+│   └── commands/            # Orchestration commands
+├── registry.json            # Enhanced custom registry
+├── install.sh               # Installation automation
+└── README.md               # Documentation
+```
+
+### Official Plugin Manifest
+
+The `.claude-plugin/plugin.json` file conforms to the official Claude Code plugin specification:
+
+```json
+{
+  "name": "specialized-agents",
+  "version": "1.0.0",
+  "description": "Specialized AI agents for software development",
+  "agents": ".claude/agents/",
+  "commands": ".claude/commands/"
+}
+```
+
+### Marketplace Distribution
+
+The `.claude-plugin/marketplace.json` enables this repository to function as a distributable marketplace:
+
+```json
+{
+  "name": "specialized-agents-marketplace",
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "name": "specialized-agents",
+      "source": ".",
+      "category": "development",
+      "agents": [ /* 7 specialized agents */ ]
+    }
+  ]
+}
+```
+
+### Using with Claude Code
+
+**Option A: Install via Claude Code Settings**
+1. Open Claude Code settings
+2. Navigate to "Plugins" or "Extensions"
+3. Add this repository URL
+4. Claude Code will recognize the `.claude-plugin/` format
+
+**Option B: Reference in Your Project**
+Add to your project's plugin configuration:
+```json
+{
+  "plugins": [
+    {
+      "source": "https://github.com/skysec/code-agents"
+    }
+  ]
+}
+```
+
+### Validation
+
+Validate the marketplace structure:
+```bash
+./validate.sh
+```
+
+This checks:
+- ✅ Official Claude Code marketplace format
+- ✅ Plugin manifest validity
+- ✅ Agent definition format
+- ✅ Custom registry structure
+
 ## 🌐 Browse the Registry
 
 **Web Interface:** Open `index.html` in your browser or visit our [GitHub Pages site](#) to browse agents visually.

@@ -1,0 +1,23 @@
+{
+  "name": "specialized-agents",
+  "version": "1.0.0",
+  "description": "A curated collection of specialized AI agents for software development workflows",
+  "author": {
+    "name": "Code Agents Team",
+    "url": "https://github.com/skysec/code-agents"
+  },
+  "homepage": "https://github.com/skysec/code-agents",
+  "repository": "https://github.com/skysec/code-agents",
+  "license": "MIT",
+  "keywords": [
+    "agents",
+    "development",
+    "security",
+    "infrastructure",
+    "code-review",
+    "planning",
+    "architecture"
+  ],
+  "agents": ".claude/agents/",
+  "commands": ".claude/commands/"
+}
