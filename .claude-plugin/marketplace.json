@@ -1,0 +1,102 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "specialized-agents-marketplace",
+  "version": "1.0.0",
+  "description": "Claude Code Agent Marketplace - A curated collection of specialized agents for software development, security, and infrastructure",
+  "owner": {
+    "name": "Code Agents Team",
+    "email": "code-agents@example.com",
+    "url": "https://github.com/skysec/code-agents"
+  },
+  "homepage": "https://github.com/skysec/code-agents",
+  "repository": "https://github.com/skysec/code-agents",
+  "plugins": [
+    {
+      "name": "specialized-agents",
+      "source": ".",
+      "description": "Collection of specialized agents for software development workflows",
+      "version": "1.0.0",
+      "category": "development",
+      "author": {
+        "name": "Code Agents Team",
+        "email": "code-agents@example.com"
+      },
+      "homepage": "https://github.com/skysec/code-agents",
+      "strict": false,
+      "agents": [
+        {
+          "name": "product-manager",
+          "category": "planning",
+          "description": "Define comprehensive product requirements with functional/non-functional specs"
+        },
+        {
+          "name": "project-manager",
+          "category": "planning",
+          "description": "Transform architectural designs into detailed implementation plans"
+        },
+        {
+          "name": "system-architect",
+          "category": "design",
+          "description": "Create comprehensive system architecture designs with technology recommendations"
+        },
+        {
+          "name": "senior-code-reviewer",
+          "category": "quality",
+          "description": "Conduct thorough code reviews focused on architecture and design patterns"
+        },
+        {
+          "name": "security-code-reviewer",
+          "category": "security",
+          "description": "Review code for security vulnerabilities using OWASP framework"
+        },
+        {
+          "name": "semgrep-specialist",
+          "category": "security",
+          "description": "Create and enhance Semgrep rules for static code analysis"
+        },
+        {
+          "name": "terraform-infrastructure-specialist",
+          "category": "infrastructure",
+          "description": "Design, review, and optimize Terraform infrastructure code"
+        }
+      ],
+      "commands": [
+        {
+          "name": "product-design",
+          "description": "Orchestrates complete product design workflow from requirements to implementation"
+        },
+        {
+          "name": "issue-implementation",
+          "description": "Fetches GitHub issue and delegates to appropriate specialist agent"
+        }
+      ]
+    }
+  ],
+  "categories": {
+    "planning": {
+      "name": "Planning & Requirements",
+      "description": "Agents for requirements gathering and project planning",
+      "icon": "📋"
+    },
+    "design": {
+      "name": "Design & Architecture",
+      "description": "Agents for system architecture and technical design",
+      "icon": "🎨"
+    },
+    "quality": {
+      "name": "Code Quality",
+      "description": "Agents for code review and quality assurance",
+      "icon": "✅"
+    },
+    "security": {
+      "name": "Security",
+      "description": "Agents for security analysis and vulnerability detection",
+      "icon": "🔒"
+    },
+    "infrastructure": {
+      "name": "Infrastructure",
+      "description": "Agents for infrastructure as code and DevOps",
+      "icon": "🏗️"
+    }
+  }
+}
